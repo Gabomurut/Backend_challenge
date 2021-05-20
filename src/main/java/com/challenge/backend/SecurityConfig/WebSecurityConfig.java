@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/login", "/auth/sign_up").permitAll()
                 // all other requests need to be authenticated
-                 .anyRequest().authenticated()
+                 //.anyRequest().authenticated()
                 ;
 
         // Add a filter to validate the tokens with every request

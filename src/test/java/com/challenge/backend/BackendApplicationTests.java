@@ -1,87 +1,84 @@
 package com.challenge.backend;
 
-import org.junit.Before;
+import com.challenge.backend.Data.PostRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.mockito.Mockito.*;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.challenge.backend.Data.PostRepository;
-import com.challenge.backend.Data.PostsOnly;
-import com.challenge.backend.Model.Post;
-
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 
-@RunWith(SpringRunner.class)
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
 	}
 
-    @MockBean
+    private MockMvc mockMvc;
     private PostRepository mockRepository;
-	
- 
-    @Before
-    public void init() throws MalformedURLException {
 
-		URL prueba = new URL("http://www.prueba.com");
-		LocalDate date = LocalDate.now();
-       
-        PostsOnly post1 = (PostsOnly) new Post(1, "Titulo", "Contenido", prueba, "Categoria", date, 1);
-        PostsOnly post2 = (PostsOnly) new Post(2, "Titulo", "Contenido", prueba, "Categoria", date, 1);
+    @Autowired
+    WebApplicationContext applicationContext;
 
-		
-		
-		@SuppressWarnings("unchecked")
-        List<PostsOnly> posts = new ArrayList();
-        posts.add(post1);
-        posts.add(post2);
+    @Autowired
+    ObjectMapper objectMapper;
 
-		Mockito.when(mockRepository.findById(1).get()).thenReturn((Post) post1);
-        Mockito.when(mockRepository.findPostsByTitleAndCategoryOrderByCreationDate("","")).thenReturn(posts);
-
+    @BeforeEach
+    public void setup() {
+        this.mockMvc = webAppContextSetup(this.applicationContext)
+            .apply(springSecurity())
+            .build();
     }
 
     @Test
-    public void testFindPostById() {
-
-        given().contentType("application/json")
-                .when().get("/posts/1")
-                .then()
-                .statusCode(200);
-
+    public void getAllPosts() throws Exception {
+        this.mockMvc
+            .perform(
+                get("/posts")
+                    .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk());
     }
 
     @Test
-    public void testFindPost() {
-
-		given().contentType("application/json")
-                .when().get("/posts")
-                .then()
-                .statusCode(200).body("size()", is(2));
-
+    public void getOnePost() throws Exception {
+        this.mockMvc
+            .perform(
+                get("/posts/3")
+                    .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNotFound());
     }
+
+
+
+
+    /*@Test
+    @WithUserDetails()
+    public void testSaveWithMock() throws Exception {
+
+        this.mockMvc
+            .perform(
+                post("/posts/1")
+                    .content(this.objectMapper.writeValueAsBytes(VehicleForm.builder().name("test").build()))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isCreated());
+    }*/
 
 }
-
-

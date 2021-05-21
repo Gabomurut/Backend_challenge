@@ -33,7 +33,8 @@ public class Post {
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate creationDate;
 
-    private int userId;
+    @ManyToOne
+    private User user;
 
     private boolean deleted;
 
@@ -93,19 +94,19 @@ public class Post {
         this.creationDate = creationDate;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Post() {
     }
 
     public Post(int id, String title, String content, String image, Category category, LocalDate creationDate,
-            int userId) {
+            User user) {
 
         Id = id;
         this.title = title;
@@ -113,14 +114,14 @@ public class Post {
         this.image = image;
         this.category = category;
         this.creationDate = creationDate;
-        this.userId = userId;
+        this.user = user;
 
     }
 
     @Override
     public String toString() {
         return "Post [Id=" + Id + ", category=" + category + ", content=" + content + ", creationDate=" + creationDate
-                + ", image=" + image + ", title=" + title + ", userId=" + userId + "]";
+                + ", image=" + image + ", title=" + title + ", user=" + user + "]";
     }
 
 }

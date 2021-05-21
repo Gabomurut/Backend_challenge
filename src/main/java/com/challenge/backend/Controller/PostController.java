@@ -132,8 +132,8 @@ public class PostController {
       if (updatePost.getImage() == null) {
         updatePost.setImage(postToPatch.getImage());
       }
-      if (updatePost.getUserId() == 0) {
-        updatePost.setUserId(postToPatch.getUserId());
+      if (updatePost.getUser() == null) {
+        updatePost.setUser(postToPatch.getUser());
       }
 
       postRepository.save(updatePost);

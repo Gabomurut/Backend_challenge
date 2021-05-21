@@ -22,104 +22,117 @@ import org.springframework.web.bind.annotation.PatchMapping;
 @RestController
 public class PostController {
 
-@Autowired
-private PostRepository postRepository;
+  @Autowired
+  private PostRepository postRepository;
 
-List<Post> posts;
+  List<Post> posts;
 
-/*POST /posts
-Deberá guardar un nuevo post según los datos recibidos en la petición. OK*/
+  /*
+   * POST /posts Deberá guardar un nuevo post según los datos recibidos en la
+   * petición. OK
+   */
 
-@PostMapping("/posts")
+  @PostMapping("/posts")
 
-void newPost(@ModelAttribute Post newPost) {
-  
-        //if(newPost.getImage().matches("(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)")) {
-        
-         postRepository.save(newPost);
-     //  } else {
-      
-       // throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Verifcar URL de Imagen ");
-     
-   //   }
-    
+  void newPost(@ModelAttribute Post newPost) {
+
+    if (newPost.getImage().matches("(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)")) {
+
+      postRepository.save(newPost);
+    } else {
+
+      throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Verifcar URL de Imagen ");
+
     }
-   
 
-/*GET /posts/:id
-Deberá buscar un post cuyo id sea el especificado en el parámetro :id. Si existe, devolver sus detalles, 
-caso contrario devolver un mensaje de error. 
-
-**OK**/
-
-
-@GetMapping("/posts/{id}")
-Post post(@PathVariable int id) {
-  try {
-  return postRepository.findById(id).get();
   }
-  catch (NoSuchElementException exc) {
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No se encuentra el post " + id, exc);
+
+  /*
+   * GET /posts/:id Deberá buscar un post cuyo id sea el especificado en el
+   * parámetro :id. Si existe, devolver sus detalles, caso contrario devolver un
+   * mensaje de error.
+   ** 
+   * OK
+   **/
+
+  @GetMapping("/posts/{id}")
+  Post post(@PathVariable int id) {
+    try {
+      return postRepository.findById(id).get();
+    } catch (NoSuchElementException exc) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
+    }
   }
-}
 
+  /*
+   * GET /posts Deberá mostrar un listado de posts, ordenados por fecha de
+   * creación, en forma descendente. Este listado deberá mostrar solamente los
+   * campos ID, título, imagen, categoría y fecha de creación. Se deberá poder
+   * filtrar por título y/o categoría. /posts?title=TITULO
+   * /posts?category=CATEGORIA /posts?titulo=TITULO&category=CATEGORY
+   ** 
+   * OK **
+   */
 
-/*GET /posts
-Deberá mostrar un listado de posts, ordenados por fecha de creación, en forma descendente. Este listado deberá mostrar solamente los campos ID, título, imagen, categoría y fecha de creación.
-Se deberá poder filtrar por título y/o categoría.
-/posts?title=TITULO
-/posts?category=CATEGORIA
-/posts?titulo=TITULO&category=CATEGORY
+  @GetMapping("/posts")
 
-**OK **
-*/
+  List<PostsOnly> posts(String title, String category) {
 
-@GetMapping("/posts")
+    return postRepository.findPostsByTitleAndCategoryOrderByCreationDate(title, category);
 
-List<PostsOnly> posts(String title, String category) { 
- 
-    return postRepository.findPostsByTitleAndCategoryOrderByCreationDate(title,category);
+  }
 
-}
+  /*
+   * DELETE /posts/:id Deberá eliminar el post con el id especificado en el
+   * parámetro :id. En el caso de que no exista, devolver un mensaje de error.
+   ** 
+   * OK
+   */
 
-/*DELETE /posts/:id
-Deberá eliminar el post con el id especificado en el parámetro :id. En el caso de que no exista, devolver un mensaje de error. 
-
-**OK*/
-
-@DeleteMapping("/posts/{id}")
+  @DeleteMapping("/posts/{id}")
   void deletePost(@PathVariable int id) {
 
     try {
       postRepository.deleteById(id);
-      }
-      catch (NoSuchElementException exc) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No se encuentra el post " + id, exc);
-      }
+    } catch (NoSuchElementException exc) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
+  }
 
-
-/*PATCH /posts/:id
-Deberá actualizar el post con el id especificado en el parámetro :id, y actualizar sus datos según el cuerpo de la petición. En el caso de que no exista, devolver un mensaje de error.
-**OK**  */
+  /*
+   * PATCH /posts/:id Deberá actualizar el post con el id especificado en el
+   * parámetro :id, y actualizar sus datos según el cuerpo de la petición. En el
+   * caso de que no exista, devolver un mensaje de error. OK**
+   */
 
   @PatchMapping("/posts/{id}")
   void patchPost(@PathVariable int id, Post updatePost) {
-    try {          
-          Post postToPatch = postRepository.findById(id).get();
-          updatePost.setId(id);
-          if(updatePost.getTitle() == null) {updatePost.setTitle(postToPatch.getTitle()); }
-          if(updatePost.getContent() == null) {updatePost.setContent(postToPatch.getContent()); }
-          if(updatePost.getCategory() == null) {updatePost.setCategory(postToPatch.getCategory()); }
-          if(updatePost.getCreationDate() == null) {updatePost.setCreationDate(postToPatch.getCreationDate()); }
-          if(updatePost.getImage() == null) {updatePost.setImage(postToPatch.getImage()); }
-          if(updatePost.getUserId() == 0) {updatePost.setUserId(postToPatch.getUserId()); }
+    try {
+      Post postToPatch = postRepository.findById(id).get();
+      updatePost.setId(id);
+      if (updatePost.getTitle() == null) {
+        updatePost.setTitle(postToPatch.getTitle());
+      }
+      if (updatePost.getContent() == null) {
+        updatePost.setContent(postToPatch.getContent());
+      }
+      if (updatePost.getCategory() == null) {
+        updatePost.setCategory(postToPatch.getCategory());
+      }
+      if (updatePost.getCreationDate() == null) {
+        updatePost.setCreationDate(postToPatch.getCreationDate());
+      }
+      if (updatePost.getImage() == null) {
+        updatePost.setImage(postToPatch.getImage());
+      }
+      if (updatePost.getUserId() == 0) {
+        updatePost.setUserId(postToPatch.getUserId());
+      }
 
-          postRepository.save(updatePost);
-      }
-      catch (NoSuchElementException exc) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No se encuentra el post " + id, exc);
-      }
+      postRepository.save(updatePost);
+    } catch (NoSuchElementException exc) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
+  }
 
 }

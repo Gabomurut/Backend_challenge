@@ -12,6 +12,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
 
+    String title;
+
     public int getId() {
         return Id;
     }
@@ -20,6 +22,12 @@ public class Category {
         this.Id = Id;
     }
 
-   
-    
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }

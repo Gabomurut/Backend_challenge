@@ -29,25 +29,25 @@ public class JwtTokenController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-/*
-POST /auth/login
-Se debe enviar usuario y contraseña para luego poder utilizar cualquiera de los endpoints siguientes
-
-*/
+    /*
+     * POST /auth/login Se debe enviar usuario y contraseña para luego poder
+     * utilizar cualquiera de los endpoints siguientes
+     * 
+     */
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User authenticationRequest) throws Exception {
 
-        final Authentication auth = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        final Authentication auth = authenticate(authenticationRequest.getUsername(),
+                authenticationRequest.getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
         return ResponseEntity.ok(new JwtResponse(jwtTokenUtil.generateToken(auth)));
     }
 
-
-        /*
-POST /auth/sign_up 
-Se debe enviar email y contraseña y se creara un nuevo usuario con esos datos. 
-**OK**  */
+    /*
+     * POST /auth/sign_up Se debe enviar email y contraseña y se creara un nuevo
+     * usuario con esos datos. OK**
+     */
 
     @PostMapping("/auth/sign_up")
     public ResponseEntity<?> saveUser(@RequestBody User user) throws Exception {

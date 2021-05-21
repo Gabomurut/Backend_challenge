@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,13 +12,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
-
 @Entity
-@SQLDelete(sql = "UPDATE post SET deleted=true WHERE id = ?") //SOFT DELETE
+@SQLDelete(sql = "UPDATE post SET deleted=true WHERE id = ?") // SOFT DELETE
 @Where(clause = "deleted = false")
 
 public class Post {
-    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +24,13 @@ public class Post {
 
     private String title;
     private String content;
-    private String image; 
-
-
+    private String image;
 
     private String category;
-    
+
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate creationDate;
-    
+
     private int userId;
 
     private boolean deleted;
@@ -85,7 +80,7 @@ public class Post {
     }
 
     public void setCategory(String category) {
-        this.category = category ;
+        this.category = category;
     }
 
     public LocalDate getCreationDate() {
@@ -106,10 +101,10 @@ public class Post {
 
     public Post() {
     }
-  
 
-    public Post(int id, String title, String content, String image, String category, LocalDate creationDate, int userId) {
-    
+    public Post(int id, String title, String content, String image, String category, LocalDate creationDate,
+            int userId) {
+
         Id = id;
         this.title = title;
         this.content = content;
@@ -126,13 +121,4 @@ public class Post {
                 + ", image=" + image + ", title=" + title + ", userId=" + userId + "]";
     }
 
-
- 
-
-    
-
-
-
 }
-
-

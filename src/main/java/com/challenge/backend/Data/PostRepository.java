@@ -2,6 +2,7 @@ package com.challenge.backend.Data;
 
 import java.util.List;
 
+import com.challenge.backend.Model.Category;
 import com.challenge.backend.Model.Post;
 
 import org.springframework.data.jpa.repository.Query;

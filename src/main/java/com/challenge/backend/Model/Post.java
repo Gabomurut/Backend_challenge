@@ -2,6 +2,7 @@ package com.challenge.backend.Model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -27,7 +28,7 @@ public class Post {
     private String content;
     private String image;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
 
     @DateTimeFormat(pattern = "MM/dd/yyyy")

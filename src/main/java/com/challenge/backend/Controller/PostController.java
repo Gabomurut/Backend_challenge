@@ -146,10 +146,10 @@ public class PostController {
 
   Category newCategory(@ModelAttribute Category newCategory) {
 
-          categoryRepository.save(newCategory);
+    categoryRepository.save(newCategory);
 
-          return newCategory;
+    return newCategory;
 
-}
+  }
 
 }

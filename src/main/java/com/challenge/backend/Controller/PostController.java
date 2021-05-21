@@ -3,8 +3,10 @@ package com.challenge.backend.Controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.challenge.backend.Data.CategoryRepository;
 import com.challenge.backend.Data.PostRepository;
 import com.challenge.backend.Data.PostsOnly;
+import com.challenge.backend.Model.Category;
 import com.challenge.backend.Model.Post;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class PostController {
   @Autowired
   private PostRepository postRepository;
 
+  @Autowired
+  private CategoryRepository categoryRepository;
+
   List<Post> posts;
 
   /*
@@ -34,11 +39,13 @@ public class PostController {
 
   @PostMapping("/posts")
 
-  void newPost(@ModelAttribute Post newPost) {
+  Post newPost(@ModelAttribute Post newPost) {
 
     if (newPost.getImage().matches("(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)")) {
 
       postRepository.save(newPost);
+      return newPost;
+
     } else {
 
       throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Verifcar URL de Imagen ");
@@ -134,5 +141,15 @@ public class PostController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }
+
+  @PostMapping("/category")
+
+  Category newCategory(@ModelAttribute Category newCategory) {
+
+          categoryRepository.save(newCategory);
+
+          return newCategory;
+
+}
 
 }

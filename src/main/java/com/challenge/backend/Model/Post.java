@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -26,7 +27,8 @@ public class Post {
     private String content;
     private String image;
 
-    private String category;
+    @ManyToOne
+    private Category category;
 
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate creationDate;
@@ -75,11 +77,11 @@ public class Post {
         this.image = image;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -102,7 +104,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(int id, String title, String content, String image, String category, LocalDate creationDate,
+    public Post(int id, String title, String content, String image, Category category, LocalDate creationDate,
             int userId) {
 
         Id = id;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 
@@ -30,15 +31,27 @@ List<Post> posts;
 Deberá guardar un nuevo post según los datos recibidos en la petición. OK*/
 
 @PostMapping("/posts")
+
 void newPost(@ModelAttribute Post newPost) {
-  postRepository.save(newPost);
-}
+  
+        //if(newPost.getImage().matches("(http(s?):)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)")) {
+        
+         postRepository.save(newPost);
+     //  } else {
+      
+       // throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Verifcar URL de Imagen ");
+     
+   //   }
+    
+    }
+   
 
 /*GET /posts/:id
 Deberá buscar un post cuyo id sea el especificado en el parámetro :id. Si existe, devolver sus detalles, 
 caso contrario devolver un mensaje de error. 
 
 **OK**/
+
 
 @GetMapping("/posts/{id}")
 Post post(@PathVariable int id) {

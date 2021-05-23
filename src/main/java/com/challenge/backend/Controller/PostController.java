@@ -86,15 +86,19 @@ public class PostController {
   List<PostsOnly> posts(String title, Integer categoryId) {
 
     Category category;
-    
-    if(categoryId != null) {
-       category = categoryRepository.findById(categoryId).get();
-    } else {
-       category = null;
-    }
-   
-    return postRepository.findAllByTitleAndCategoryOrderByCreationDate(title, category);
 
+    try {
+
+      if (categoryId != null) {
+        category = categoryRepository.findById(categoryId).get();
+      } else {
+        category = null;
+      }
+    } catch (NoSuchElementException exc) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "La categoría " + categoryId + " no existe", exc);
+    }
+
+    return postRepository.findAllByTitleAndCategoryOrderByCreationDate(title, category);
 
   }
 

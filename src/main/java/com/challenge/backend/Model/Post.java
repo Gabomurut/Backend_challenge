@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.SQLDelete;
@@ -22,19 +23,20 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
+    private int id;
 
     private String title;
     private String content;
     private String image;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate creationDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
 
     private boolean deleted;
@@ -48,11 +50,11 @@ public class Post {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getTitle() {
@@ -109,7 +111,7 @@ public class Post {
     public Post(int id, String title, String content, String image, Category category, LocalDate creationDate,
             User user) {
 
-        Id = id;
+        this.id = id;
         this.title = title;
         this.content = content;
         this.image = image;
@@ -121,7 +123,7 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post [Id=" + Id + ", category=" + category + ", content=" + content + ", creationDate=" + creationDate
+        return "Post [Id=" + id + ", category=" + category + ", content=" + content + ", creationDate=" + creationDate
                 + ", image=" + image + ", title=" + title + ", user=" + user + "]";
     }
 

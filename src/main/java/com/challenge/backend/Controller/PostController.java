@@ -83,9 +83,18 @@ public class PostController {
 
   @GetMapping("/posts")
 
-  List<PostsOnly> posts(String title, String category) {
+  List<PostsOnly> posts(String title, Integer categoryId) {
 
-    return postRepository.findPostsByTitleAndCategoryOrderByCreationDate(title, category);
+    Category category;
+    
+    if(categoryId != null) {
+       category = categoryRepository.findById(categoryId).get();
+    } else {
+       category = null;
+    }
+   
+    return postRepository.findAllByTitleAndCategoryOrderByCreationDate(title, category);
+
 
   }
 

@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends CrudRepository<Post, Integer> {
 
-    @Query("SELECT p FROM Post p WHERE (:title is null or p.title = :title) and (:category is null"
-            + " or p.category = :category) ORDER BY creationDate DESC")
-    List<PostsOnly> findPostsByTitleAndCategoryOrderByCreationDate(@Param("title") String title,
-            @Param("category") String category);
+
+        @Query("SELECT p FROM Post p WHERE (:title is null or p.title = :title) and (:category is null" + " or p.category = :category) ORDER BY creationDate DESC")
+        List<PostsOnly> findAllByTitleAndCategoryOrderByCreationDate(@Param ("title") String title, @Param ("category") Category category) ;
+        
 
 }

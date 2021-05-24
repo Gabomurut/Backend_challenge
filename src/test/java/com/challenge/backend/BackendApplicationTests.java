@@ -9,17 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 import static io.restassured.RestAssured.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.challenge.backend.Data.PostRepository;
 
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -86,14 +87,15 @@ class BackendApplicationTests {
     // Test de Delete by Id (Post)
 
     @Test
-    public void testDeletePostById() {
+    public void testDeletePostByIdNotFound() {
         Authentication authentication = getAuthentication();
         String token = jwtTokenService.generateToken(authentication);
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + token);
-        given().contentType("application/json").headers(headers).when().delete("/posts/2").then().statusCode(404);
-        Mockito.verify(mockRepository).deleteById(1);
-        
+
+        doThrow(new EmptyResultDataAccessException(1)).when(mockRepository).deleteById(14);
+
+        given().contentType("application/json").headers(headers).when().delete("/posts/14").then().statusCode(404);
     }
 
 

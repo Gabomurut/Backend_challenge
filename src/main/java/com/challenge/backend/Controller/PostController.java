@@ -67,7 +67,7 @@ public class PostController {
   Post post(@PathVariable int id) {
     try {
       return postRepository.findById(id).get();
-    } catch (EmptyResultDataAccessException exc) {
+    } catch (NoSuchElementException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }
@@ -151,7 +151,7 @@ public class PostController {
       }
 
       postRepository.save(updatePost);
-    } catch (EmptyResultDataAccessException exc) {
+    } catch (NoSuchElementException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }

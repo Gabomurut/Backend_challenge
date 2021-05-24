@@ -10,6 +10,7 @@ import com.challenge.backend.Model.Category;
 import com.challenge.backend.Model.Post;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,7 +67,7 @@ public class PostController {
   Post post(@PathVariable int id) {
     try {
       return postRepository.findById(id).get();
-    } catch (NoSuchElementException exc) {
+    } catch (EmptyResultDataAccessException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }
@@ -94,7 +95,7 @@ public class PostController {
       } else {
         category = null;
       }
-    } catch (NoSuchElementException exc) {
+    } catch (EmptyResultDataAccessException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "La categoría " + categoryId + " no existe", exc);
     }
 
@@ -114,7 +115,7 @@ public class PostController {
 
     try {
       postRepository.deleteById(id);
-    } catch (NoSuchElementException exc) {
+    } catch (EmptyResultDataAccessException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }
@@ -150,7 +151,7 @@ public class PostController {
       }
 
       postRepository.save(updatePost);
-    } catch (NoSuchElementException exc) {
+    } catch (EmptyResultDataAccessException exc) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el post " + id, exc);
     }
   }
